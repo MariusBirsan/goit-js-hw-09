@@ -2,7 +2,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-const newData = {
+const dataObj = {
     days: document.querySelector("span[data-days]"),
     seconds: document.querySelector("span[data-seconds]"),
     minutes: document.querySelector("span[data-minutes]"),
@@ -11,7 +11,9 @@ const newData = {
   };
   
   let timerId = null;
-  newData.btn.setAttribute("disabled", true);
+  dataObj.btn.setAttribute("disabled", true);
+
+  dataObj.btn.addEventListener("click", timerStart);
   
   const options = {
     enableTime: true,
@@ -23,9 +25,9 @@ const newData = {
       const currentDate = new Date();
       console.log(selectedDates[0]);
       if (selectedDates[0] - currentDate > 0) {
-        newData.btn.disabled = false;
+        dataObj.btn.disabled = false;
       } else {
-        newData.btn.disabled = true;
+        dataObj.btn.disabled = true;
         Notify.failure("Please choose a date in the future", {
           timeout: 1500,
           width: "400px",
@@ -58,23 +60,23 @@ const newData = {
   
     timerId = setInterval(() => {
       const current = new Date();
-      const count = selectedDate - current;
-      newData.btn.disabled = true;
+      const diff = selectedDate - current;
+      dataObj.btn.disabled = true;
   
-      if (count < 0) {
+      if (diff < 0) {
         clearInterval(timerId);
         Notify.success("Time end");
         return;
       }
-      showTime(convertMs(count));
+      showTime(convertMs(diff));
     }, 1000);
   }
   
   function showTime({ days, hours, minutes, seconds }) {
-    newData.days.textContent = addLeadingZero(days);
-    newData.hours.textContent = addLeadingZero(hours);
-    newData.minutes.textContent = addLeadingZero(minutes);
-    newData.seconds.textContent = addLeadingZero(seconds);
+    dataObj.days.textContent = addLeadingZero(days);
+    dataObj.hours.textContent = addLeadingZero(hours);
+    dataObj.minutes.textContent = addLeadingZero(minutes);
+    dataObj.seconds.textContent = addLeadingZero(seconds);
   }
   
-  newData.btn.addEventListener("click", timerStart);
+  
